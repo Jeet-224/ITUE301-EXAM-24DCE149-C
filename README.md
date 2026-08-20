@@ -1,53 +1,52 @@
-# Library Book Management System (Set B)
+# Library Book Management System
 
-An academic project developed as part of the Practical Examination. It digitizes basic information about library books, members, and borrowing logs.
-
-**Student Details:**
-- **Roll Number:** 24DCE149
-- **Batch:** B
-- **Tech Stack:** React (Vite) + Express.js + MongoDB + Mongoose
+An academic project that digitizes basic information about library books, members, and borrowing logs using React (Vite) + Express.js + MongoDB.
 
 ---
 
-## 🛠️ Project Structure
-- `/frontend` - Vite React frontend containing component architecture, routing, form inputs, and API integrations.
-- `/backend` - Express.js REST API with custom logger, validation models, and Mongoose database operations.
+## 1. Project Name
+Library Book Management System
 
 ---
 
-## ⚙️ Requirements & Environment Setup
-
-Copy `.env.example` to `.env` in the root folder:
+## 2. Frontend Setup and Run Command
 
 ```bash
-# Environment Variables (.env)
-MONGO_URI=mongodb://127.0.0.1:27017/itue301_library_db
+cd frontend
+npm install
+npm run dev
+```
+The frontend will run on `http://localhost:5173`
+
+---
+
+## 3. Backend Setup and Run Command
+
+```bash
+cd backend
+npm install
+npm start
+```
+The backend will run on `http://localhost:5000`
+
+---
+
+## 4. MongoDB Setup
+
+Ensure MongoDB is running locally on `mongodb://localhost:27017` or update the `MONGO_URI` in the `.env` file with your MongoDB connection string (local or MongoDB Atlas).
+
+---
+
+## 5. Required Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+MONGO_URI=mongodb://localhost:27017/itue301_library_db
 PORT=5000
 ```
 
----
-
-## 🚀 Running the Backend
-
-1. Navigate to the backend folder:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the Express server:
-   ```bash
-   npm start
-   ```
-   *The backend will boot up, connect to MongoDB, and listen on port 5000.*
-
-### 📡 API REST Endpoints
-- **GET** `http://localhost:5000/api/v1/books` - Returns in-memory books catalog.
-- **GET** `http://localhost:5000/api/v1/borrowings` - Returns borrowing logs.
-- **POST** `http://localhost:5000/api/v1/borrowings` - Appends a borrowing log.
-- **POST** `http://localhost:5000/api/v1/db/seed` - Seeds MongoDB with sample books and members.
+Refer to `.env.example` for the template.
 - **POST** `http://localhost:5000/api/v1/db/borrow` - Inserts borrowing records in MongoDB.
 - **GET** `http://localhost:5000/api/v1/db/test-error?type=<type>` - Triggers Mongoose schema validations.
   - Types: `missing-book-fields`, `missing-member-name`, `invalid-borrowing-status`.
