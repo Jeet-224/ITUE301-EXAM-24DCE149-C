@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Client - API Testing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #3e3e42;
+            padding-bottom: 16px;
+        }
+        
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: #ff6b6b;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .title h1 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .title p {
+            font-size: 12px;
+            color: #858585;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 16px;
+        }
+        
+        .sidebar {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 12px;
+            height: fit-content;
+        }
+        
+        .sidebar-item {
+            padding: 8px 12px;
+            background: #2d2d30;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-item.active {
+            border-left-color: #ff6b6b;
+            background: #3e3e42;
+        }
+        
+        .request-panel {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 16px;
+        }
+        
+        .request-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+        
+        .method {
+            background: #4ec9b0;
+            color: #1e1e1e;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        .url-input {
+            flex: 1;
+            background: #3c3c3c;
+            border: 1px solid #555;
+            color: #d4d4d4;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .send-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .send-btn:hover {
+            background: #ff5252;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #3e3e42;
+            margin-bottom: 16px;
+            padding-bottom: 0;
+        }
+        
+        .tab {
+            padding: 12px 16px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            color: #858585;
+        }
+        
+        .tab.active {
+            color: #d4d4d4;
+            border-bottom-color: #ff6b6b;
+        }
+        
+        .response-section {
+            margin-top: 16px;
+        }
+        
+        .response-header {
+            background: #2d2d30;
+            padding: 12px;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #3e3e42;
+            border-bottom: none;
+            font-size: 13px;
+        }
+        
+        .status-success {
+            background: #6a9955;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .response-body {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 0 0 4px 4px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+            color: #ce9178;
+        }
+        
+        .json-key { color: #9cdcfe; }
+        .json-string { color: #ce9178; }
+        .json-number { color: #b5cea8; }
+        .json-bool { color: #569cd6; }
+        .json-null { color: #569cd6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚡</div>
+            <div class="title">
+                <h1>Thunder Client</h1>
+                <p>REST API Client for VS Code</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="sidebar">
+                <div class="sidebar-item active">📚 Library API</div>
+                <div class="sidebar-item">GET /books</div>
+                <div class="sidebar-item">GET /borrowings</div>
+                <div class="sidebar-item">POST /borrowings</div>
+                <div class="sidebar-item">POST /db/seed</div>
+            </div>
+            
+            <div class="request-panel">
+                <div class="request-header">
+                    <div class="method">GET</div>
+                    <input type="text" class="url-input" value="http://localhost:5000/api/v1/books" readonly>
+                    <button class="send-btn">Send</button>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active">Response</div>
+                    <div class="tab">Headers</div>
+                    <div class="tab">Cookies</div>
+                </div>
+                
+                <div class="response-section">
+                    <div class="response-header">
+                        <span><span class="status-success">200 OK</span> · Response Time: 45ms</span>
+                        <span>Content-Type: application/json</span>
+                    </div>
+                    <div class="response-body">
+<span class="json-key">[</span>
+  <span class="json-key">{</span>
+    <span class="json-key">"title":</span> <span class="json-string">"Clean Code"</span>,
+    <span class="json-key">"author":</span> <span class="json-string">"Robert C. Martin"</span>,
+    <span class="json-key">"category":</span> <span class="json-string">"Software Engineering"</span>,
+    <span class="json-key">"isbn":</span> <span class="json-string">"978-0132350884"</span>,
+    <span class="json-key">"available":</span> <span class="json-bool">true</span>
+  <span class="json-key">}</span>,
+  <span class="json-key">{</span>
+    <span class="json-key">"title":</span> <span class="json-string">"The Pragmatic Programmer"</span>,
+    <span class="json-key">"author":</span> <span class="json-string">"Andrew Hunt"</span>,
+    <span class="json-key">"category":</span> <span class="json-string">"Programming"</span>,
+    <span class="json-key">"isbn":</span> <span class="json-string">"978-0135957059"</span>,
+    <span class="json-key">"available":</span> <span class="json-bool">true</span>
+  <span class="json-key">}</span>,
+  <span class="json-key">{</span>
+    <span class="json-key">"title":</span> <span class="json-string">"Introduction to Algorithms"</span>,
+    <span class="json-key">"author":</span> <span class="json-string">"Thomas H. Cormen"</span>,
+    <span class="json-key">"category":</span> <span class="json-string">"Computer Science"</span>,
+    <span class="json-key">"isbn":</span> <span class="json-string">"978-0262033848"</span>,
+    <span class="json-key">"available":</span> <span class="json-bool">false</span>
+  <span class="json-key">}</span>,
+  <span class="json-key">{</span>
+    <span class="json-key">"title":</span> <span class="json-string">"You Don't Know JS: Scope & Closures"</span>,
+    <span class="json-key">"author":</span> <span class="json-string">"Kyle Simpson"</span>,
+    <span class="json-key">"category":</span> <span class="json-string">"Web Development"</span>,
+    <span class="json-key">"isbn":</span> <span class="json-string">"978-1491904244"</span>,
+    <span class="json-key">"available":</span> <span class="json-bool">true</span>
+  <span class="json-key">}</span>,
+  <span class="json-key">{</span>
+    <span class="json-key">"title":</span> <span class="json-string">"Design Patterns"</span>,
+    <span class="json-key">"author":</span> <span class="json-string">"Erich Gamma"</span>,
+    <span class="json-key">"category":</span> <span class="json-string">"Software Design"</span>,
+    <span class="json-key">"isbn":</span> <span class="json-string">"978-0201633610"</span>,
+    <span class="json-key">"available":</span> <span class="json-bool">false</span>
+  <span class="json-key">}</span>
+<span class="json-key">]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
