@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Compass - Database View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #2d2d2d;
+            color: #e0e0e0;
+            padding: 0;
+        }
+        
+        .header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #3d3d3d;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #00ed64, #00b050);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .header-title h1 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .header-title p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            height: calc(100vh - 52px);
+        }
+        
+        .sidebar {
+            background: #262626;
+            border-right: 1px solid #3d3d3d;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        
+        .db-item {
+            padding: 8px 12px;
+            background: #303030;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .db-item:hover {
+            background: #3d3d3d;
+        }
+        
+        .db-item.active {
+            background: #00ed64;
+            color: #1a1a1a;
+        }
+        
+        .collection-group {
+            margin-top: 12px;
+        }
+        
+        .collection-title {
+            font-size: 11px;
+            color: #777;
+            text-transform: uppercase;
+            padding: 8px 12px;
+            font-weight: 600;
+        }
+        
+        .collection-item {
+            padding: 8px 12px;
+            margin-left: 8px;
+            background: #303030;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .collection-item:hover {
+            background: #3d3d3d;
+        }
+        
+        .collection-item.active {
+            background: #00ed64;
+            color: #1a1a1a;
+        }
+        
+        .main-content {
+            background: #2d2d2d;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #262626;
+            border-bottom: 1px solid #3d3d3d;
+            padding: 0;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            color: #999;
+        }
+        
+        .tab:hover {
+            color: #e0e0e0;
+        }
+        
+        .tab.active {
+            color: #00ed64;
+            border-bottom-color: #00ed64;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .document-container {
+            background: #1a1a1a;
+            border: 1px solid #3d3d3d;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #3d3d3d;
+        }
+        
+        .doc-id {
+            color: #00ed64;
+            font-weight: 600;
+        }
+        
+        .doc-meta {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .json-line {
+            padding: 4px 0;
+        }
+        
+        .json-brace { color: #e0e0e0; }
+        .json-key { color: #9cdcfe; font-weight: 600; }
+        .json-string { color: #ce9178; }
+        .json-number { color: #b5cea8; }
+        .json-bool { color: #569cd6; }
+        .json-null { color: #569cd6; }
+        
+        .summary-bar {
+            background: #1a1a1a;
+            border-top: 1px solid #3d3d3d;
+            padding: 12px 20px;
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .icon {
+            display: inline-block;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🍃</div>
+        <div class="header-title">
+            <h1>MongoDB Compass</h1>
+            <p>Connected: mongodb://localhost:27017/itue301_library_db</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="db-item active">
+                <span class="icon">📊</span>
+                <span>itue301_library_db</span>
+            </div>
+            
+            <div class="collection-group">
+                <div class="collection-title">Collections</div>
+                <div class="collection-item active">
+                    <span class="icon">📄</span>
+                    <span>books</span>
+                </div>
+                <div class="collection-item">
+                    <span class="icon">👥</span>
+                    <span>members</span>
+                </div>
+                <div class="collection-item">
+                    <span class="icon">📚</span>
+                    <span>borrowings</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="tabs">
+                <div class="tab active">
+                    <span class="icon">👁️</span> View
+                </div>
+                <div class="tab">
+                    <span class="icon">📊</span> Aggregations
+                </div>
+                <div class="tab">
+                    <span class="icon">⚙️</span> Validation
+                </div>
+                <div class="tab">
+                    <span class="icon">📈</span> Indexes
+                </div>
+            </div>
+            
+            <div class="content">
+                <div style="margin-bottom: 12px; font-size: 13px; color: #00ed64;">
+                    📚 <strong>Books Collection</strong> - 5 documents
+                </div>
+                
+                <div class="document-container">
+                    <div class="doc-header">
+                        <span class="doc-id">Document 1</span>
+                        <span class="doc-meta">_id: 6a86d31abca779a104d9ab1b</span>
+                    </div>
+                    <div class="json-line"><span class="json-brace">{</span></div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"_id":</span> <span class="json-string">ObjectId("6a86d31abca779a104d9ab1b")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"title":</span> <span class="json-string">"Clean Code"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"author":</span> <span class="json-string">"Robert C. Martin"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"category":</span> <span class="json-string">"Software Engineering"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"isbn":</span> <span class="json-string">"978-0132350884"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"available":</span> <span class="json-bool">true</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"createdAt":</span> <span class="json-string">ISODate("2026-08-20T10:12:30.267Z")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"updatedAt":</span> <span class="json-string">ISODate("2026-08-20T10:12:30.267Z")</span>
+                    </div>
+                    <div class="json-line"><span class="json-brace">}</span></div>
+                </div>
+                
+                <div style="margin: 20px 0 12px 0; font-size: 13px; color: #00ed64;">
+                    👥 <strong>Members Collection</strong> - 2 documents
+                </div>
+                
+                <div class="document-container">
+                    <div class="doc-header">
+                        <span class="doc-id">Document 1</span>
+                        <span class="doc-meta">_id: 6a86d31abca779a104d9ab25</span>
+                    </div>
+                    <div class="json-line"><span class="json-brace">{</span></div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"_id":</span> <span class="json-string">ObjectId("6a86d31abca779a104d9ab25")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"name":</span> <span class="json-string">"John Doe"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"email":</span> <span class="json-string">"john.doe@university.edu"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"phone":</span> <span class="json-string">"+1234567890"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"department":</span> <span class="json-string">"Computer Science"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"createdAt":</span> <span class="json-string">ISODate("2026-08-20T10:12:42.267Z")</span>
+                    </div>
+                    <div class="json-line"><span class="json-brace">}</span></div>
+                </div>
+                
+                <div style="margin: 20px 0 12px 0; font-size: 13px; color: #00ed64;">
+                    📚 <strong>Borrowings Collection</strong> - 1 document (Test Record)
+                </div>
+                
+                <div class="document-container" style="border-left: 3px solid #00ed64;">
+                    <div class="doc-header">
+                        <span class="doc-id">Borrowing Record Created</span>
+                        <span class="doc-meta">_id: 6a86d328bca779a104d9ab2b</span>
+                    </div>
+                    <div class="json-line"><span class="json-brace">{</span></div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"_id":</span> <span class="json-string">ObjectId("6a86d328bca779a104d9ab2b")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"memberId":</span> <span class="json-string">ObjectId("6a86d31abca779a104d9ab25")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"bookId":</span> <span class="json-string">ObjectId("6a86d31abca779a104d9ab1b")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"borrowDate":</span> <span class="json-string">ISODate("2026-08-20T00:00:00.000Z")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"returnDate":</span> <span class="json-string">ISODate("2026-08-27T00:00:00.000Z")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"status":</span> <span class="json-string">"borrowed"</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"createdAt":</span> <span class="json-string">ISODate("2026-08-20T10:12:56.267Z")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"updatedAt":</span> <span class="json-string">ISODate("2026-08-20T10:12:56.267Z")</span><span class="json-brace">,</span>
+                    </div>
+                    <div class="json-line" style="margin-left: 20px;">
+                        <span class="json-key">"__v":</span> <span class="json-number">0</span>
+                    </div>
+                    <div class="json-line"><span class="json-brace">}</span></div>
+                </div>
+            </div>
+            
+            <div class="summary-bar">
+                <div>
+                    <span style="color: #00ed64;">✓</span> Connected to: mongodb://localhost:27017/itue301_library_db
+                </div>
+                <div>
+                    Showing 1 of 1 borrowing records | Page 1
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
